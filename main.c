@@ -3,6 +3,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 #include "image.h"
+#include "Functions.h"
 #include "music.h"
 #include "text.h"
 int main(int argc, char** argv){
@@ -17,6 +18,7 @@ int main(int argc, char** argv){
     Image buttonv1_a,buttonv2_a, buttonv3_a;
     Image soundBar1, plus_sound, minus_sound;
     Image soundBar2,soundBar3,soundBar4,soundBar5,soundBar6;
+    Image soundBar;
     Image no_music, yes_music;
     Image Backg1;
     Image musicon,musicoff,soundfxoff,soundfxon;
@@ -81,229 +83,86 @@ int main(int argc, char** argv){
     int count_music =0;
     int soundfx =1;
     int music=1;
+    int mouseover=0;
+    int mousedown = 0;
+    char file_num[5];
     while (!done){
-        switch(clicked){
-            case 1:
-                afficher(StartBackg, screen);
-                SDL_Flip(screen);
-                break;
-            case 2:
-                switch(count_music){
-                            case 0:
-                                afficher(SettingsBackg,screen);
-                                afficher(soundBar1, screen);
-                                afficher(plus_sound, screen);
-                                afficher(minus_sound, screen);
-                                afficher(musicon, screen);
-                                if(music)
-                                    afficher(musicon, screen);
-                                else
-                                    afficher(musicoff, screen);
-                                if(soundfx)
-                                    afficher(soundfxon, screen);
-                                else
-                                    afficher(soundfxoff, screen);
-                                SDL_Flip(screen);
-                                break;
-                            case -1:
-                                afficher(SettingsBackg,screen);
-                                afficher(plus_sound, screen);
-                                afficher(minus_sound, screen);
-                                afficher(soundBar2, screen);
-                                if(music)
-                                    afficher(musicon, screen);
-                                else
-                                    afficher(musicoff, screen);
-                                if(soundfx)
-                                    afficher(soundfxon, screen);
-                                else
-                                    afficher(soundfxoff, screen);
-                                SDL_Flip(screen);
-                                break;
-                            case -2:
-                                afficher(SettingsBackg,screen);
-                                afficher(plus_sound, screen);
-                                afficher(minus_sound, screen);
-                                afficher(soundBar3, screen);
-                                if(music)
-                                    afficher(musicon, screen);
-                                else
-                                    afficher(musicoff, screen);
-                                if(soundfx)
-                                    afficher(soundfxon, screen);
-                                else
-                                    afficher(soundfxoff, screen);
-                                SDL_Flip(screen);
-                                Mix_VolumeChunk(backgroundmusic, 5*MIX_MAX_VOLUME/6);
-                                //Mix_VolumeMusic(5*MIX_MAX_VOLUME/6);
-                                break;
-                            case -3:
-                                afficher(SettingsBackg,screen);
-                                afficher(plus_sound, screen);
-                                afficher(minus_sound, screen);
-                                afficher(soundBar4, screen);
-                                if(music)
-                                    afficher(musicon, screen);
-                                else
-                                    afficher(musicoff, screen);
-                                if(soundfx)
-                                    afficher(soundfxon, screen);
-                                else
-                                    afficher(soundfxoff, screen);
-                                SDL_Flip(screen);
-                                Mix_VolumeChunk(backgroundmusic, 2*MIX_MAX_VOLUME/3);
-                                //Mix_VolumeMusic(2*MIX_MAX_VOLUME/3);
-                                break;
-                            case -4:
-                                afficher(SettingsBackg,screen);
-                                afficher(plus_sound, screen);
-                                afficher(minus_sound, screen);
-                                afficher(soundBar5, screen);
-                                if(music)
-                                    afficher(musicon, screen);
-                                else
-                                    afficher(musicoff, screen);
-                                if(soundfx)
-                                    afficher(soundfxon, screen);
-                                else
-                                    afficher(soundfxoff, screen);
-                                SDL_Flip(screen);
-                                Mix_VolumeChunk(backgroundmusic, MIX_MAX_VOLUME/5);
-                                break;
-                            case -5:
-                                afficher(SettingsBackg,screen);
-                                afficher(plus_sound, screen);
-                                afficher(minus_sound, screen);
-                                afficher(soundBar6, screen);
-                                if(music)
-                                    afficher(musicon, screen);
-                                else
-                                    afficher(musicoff, screen);
-                                if(soundfx)
-                                    afficher(soundfxon, screen);
-                                else
-                                    afficher(soundfxoff, screen);
-                                SDL_Flip(screen);
-                                Mix_VolumeChunk(backgroundmusic, 0);
-                                break;
-                        }
-                switch(numsettings){
-                    case 1:
-                        SDL_Delay(100);
-                        if(count_music == -5)
-                            count_music = -5;
-                        else
-                            count_music--;
-                        numsettings = -1;
-                        break;
-                    case 2: 
-                        SDL_Delay(100);
-                        if(count_music == 0)
-                            count_music = 0;
-                        else
-                            count_music++;
-                        numsettings = -1;
-                        break;
 
-
-
-
-
-                }
-                break;
-            case 3:
-                done = 1;
-        }
+        SDL_Flip(screen);
 
         switch(numback){
         case 1:
-            if(clicked==0){
-            afficher(Backg1, screen);
-            afficher(buttonv1, screen);
-            afficher(buttonv2, screen);
-            afficher(buttonv3, screen);
-            displayText(tv1, screen);
-            displayText(tv2, screen);
-            displayText(tv3, screen);
-            SDL_Flip(screen);
+            ShowOnScreen((Image[]){Backg1, buttonv1, buttonv2, buttonv3},4,screen);
+            DisplayOnScreen((Text[]){tv1,tv2,tv3},3,screen);
+            switch(mouseover){
+                case 1:
+                    ShowOnScreen((Image[]){Backg1, buttonv1_s, buttonv2, buttonv3},4,screen);
+                    DisplayOnScreen((Text[]){tv1_s,tv2,tv3},3, screen);
+                    mouseover = -1;
+                    break;
+                case 2:
+                    ShowOnScreen((Image[]){Backg1, buttonv1, buttonv2_s, buttonv3},4,screen);
+                    DisplayOnScreen((Text[]){tv1,tv2_s,tv3},3, screen);
+                    mouseover = -1;
+                    break;
+                    break;
+                case 3:
+                    ShowOnScreen((Image[]){Backg1, buttonv1, buttonv2, buttonv3_s},4,screen);
+                    DisplayOnScreen((Text[]){tv1,tv2,tv3_s},3, screen);
+                    mouseover = -1;
+                    break;
+
+            }
+            switch(mousedown){
+                case 1:
+                    ShowOnScreen((Image[]){Backg1, buttonv1_a, buttonv2, buttonv3},4,screen);
+                    DisplayOnScreen((Text[]){tv1,tv2,tv3},3, screen);
+                    SDL_Flip(screen);
+                    SDL_Delay(500);
+                    numback = 2;
+                    mousedown = -1;
+                    break;
+                    break;
+                case 2:
+                    ShowOnScreen((Image[]){Backg1, buttonv1, buttonv2_a, buttonv3},4,screen);
+                    DisplayOnScreen((Text[]){tv1,tv2,tv3},3, screen);
+                    SDL_Flip(screen);
+                    SDL_Delay(500);
+                    numback = 3;
+                    mousedown = -1;
+                    break;
+                case 3:
+                    ShowOnScreen((Image[]){Backg1, buttonv1, buttonv2, buttonv3_a},4,screen);
+                    DisplayOnScreen((Text[]){tv1,tv2,tv3},3, screen);
+                    SDL_Flip(screen);
+                    SDL_Delay(500);
+                    done = 1;
+                    mousedown = -1;
+                    break;
+
+                
+
+
             }
             break;
         case 2:
-            if (clicked == 0){
-            afficher(Backg1, screen);
-            afficher(buttonv1_s, screen);
-            afficher(buttonv2, screen);
-            afficher(buttonv3, screen);
-            displayText(tv1_s, screen);
-            displayText(tv2, screen);
-            displayText(tv3, screen);
-            SDL_Flip(screen);
-            }
+            ShowOnScreen((Image[]){StartBackg},1,screen);
             break;
         case 3:
-            if(clicked == 0){
-            afficher(Backg1, screen);
-            afficher(buttonv1, screen);
-            afficher(buttonv2_s, screen);
-            afficher(buttonv3, screen);
-            displayText(tv1, screen);
-            displayText(tv2_s, screen);
-            displayText(tv3, screen);
-            SDL_Flip(screen);
-            }
+            sprintf(file_num, "%d", (6-count_music*-1));
+            strcat(file_num, ".png");
+            initImage(&soundBar,500,200,file_num);
+            ShowOnScreen((Image[]){SettingsBackg,soundBar,plus_sound,minus_sound},4,screen);
+            if(music)
+                afficher(musicon, screen);
+            else
+                afficher(musicoff, screen);
+            if(soundfx)
+                afficher(soundfxon, screen);
+            else
+                afficher(soundfxoff, screen);
+            Mix_VolumeChunk(backgroundmusic, MIX_MAX_VOLUME - ((MIX_MAX_VOLUME * 0.2) * (count_music*-1)));
             break;
-        case 4:
-            if(clicked == 0){
-            afficher(Backg1, screen);
-            afficher(buttonv1, screen);
-            afficher(buttonv2, screen);
-            afficher(buttonv3_s, screen);
-            displayText(tv1, screen);
-            displayText(tv2, screen);
-            displayText(tv3_s, screen);
-            SDL_Flip(screen);
-            }
-            break;
-        case 5:
-            afficher(Backg1, screen);
-            afficher(buttonv1_a, screen);
-            afficher(buttonv2, screen);
-            afficher(buttonv3, screen);
-            displayText(tv1, screen);
-            displayText(tv2, screen);
-            displayText(tv3, screen);
-            SDL_Flip(screen);
-            SDL_Delay(500);
-            numback = -1;
-            clicked = 1;
-            break;
-        case 6:
-            afficher(Backg1, screen);
-            afficher(buttonv1, screen);
-            afficher(buttonv2_a, screen);
-            afficher(buttonv3, screen);
-            displayText(tv1, screen);
-            displayText(tv2, screen);
-            displayText(tv3, screen);
-            SDL_Flip(screen);
-            SDL_Delay(500);
-            numback = -1;
-            clicked=2;
-            break;
-        case 7:
-            afficher(Backg1, screen);
-            afficher(buttonv1, screen);
-            afficher(buttonv2, screen);
-            afficher(buttonv3_a, screen);
-            displayText(tv1, screen);
-            displayText(tv2, screen);
-            displayText(tv3, screen);
-            SDL_Flip(screen);
-            SDL_Delay(500);
-            numback = -1;
-            clicked = 3;
-            break;
-
             
 
         }
@@ -318,7 +177,6 @@ int main(int argc, char** argv){
                     done =1;
                 else if (event.key.keysym.sym == SDLK_a){
                     numback = 1;
-                    clicked =0;
                 }
                 else if (event.key.keysym.sym == SDLK_F5)
                 {
@@ -334,17 +192,17 @@ int main(int argc, char** argv){
                 if (event.motion.x >= 590 && event.motion.x <= 590 + 300 &&
                     event.motion.y >= 390 && event.motion.y <= 390 + 124)
                 {
-                    numback = 2;
+                    mouseover = 1;
                 }
                 else if (event.motion.x >= 590 && event.motion.x <= 590 + 300 &&
                     event.motion.y >= 490 && event.motion.y <= 490 + 124)
                 {
-                    numback = 3;
+                    mouseover = 2;
                 }
                 else if (event.motion.x >= 590 && event.motion.x <= 590 + 300 &&
                     event.motion.y >= 590 && event.motion.y <= 590 + 124 )
                 {
-                    numback = 4;
+                    mouseover = 3;
                 }
                 break;
             
@@ -355,27 +213,36 @@ int main(int argc, char** argv){
                 if (event.motion.x >= 590 && event.motion.x <= 590 + 300 &&
                     event.motion.y >= 390 && event.motion.y <= 390 + 124 )
                 {
-                    numback = 5;
+                    mousedown = 1;
                 }
                 else if (event.motion.x >= 590 && event.motion.x <= 590 + 300 &&
                     event.motion.y >= 490 && event.motion.y <= 490 + 124 )
                 {
-                    numback = 6;
+                    mousedown = 2;
                 }
                 else if (event.motion.x >= 590 && event.motion.x <= 590 + 300 &&
                     event.motion.y >= 590 && event.motion.y <= 590 + 124)
                 {
-                    numback = 7;
+                    mousedown = 3;
                 }
                 else if (event.motion.x >= 900 && event.motion.x <= 900 + 200 &&
                     event.motion.y >= 250 && event.motion.y <= 250 + 82 )
                 {
-                    numsettings = 2;
+                    SDL_Delay(100);
+                    if(count_music == 0)
+                        count_music = 0;
+                    else
+                        count_music++;
                 }
                 else if (event.motion.x >= 900 && event.motion.x <= 900 + 200 &&
                     event.motion.y >= 350 && event.motion.y <= 350 + 82 )
                 {
-                    numsettings = 1;
+                    SDL_Delay(100);
+                    if(count_music == -5)
+                        count_music = -5;
+                    else
+                        count_music--;
+
                 }
                 else if (event.motion.x >= 900 && event.motion.x <= 900 + 200 &&
                     event.motion.y >= 500 && event.motion.y <= 500 + 82 )
