@@ -17,7 +17,7 @@ void initImage(Image *A, int x, int y, char filename[])
 	A->pos2.w=A->img->w;
 	A->pos2.h=A->img->h;
 }
-void initBackground(Image *Backg,int w,int h, char filename[])
+void initBackground(Image *Backg,int x,int y, char filename[])
 {
 Backg->img= IMG_Load(filename);
 	if(Backg->img == NULL){
@@ -26,10 +26,13 @@ return;
 }
 Backg->pos1.x=0;
 Backg->pos1.y=0;
-Backg->pos2.x=0;
-Backg->pos2.y=0;
-Backg->pos2.w=(w);
-Backg->pos2.h=h;
+Backg->pos1.w=SCREEN_W;
+Backg->pos1.h=SCREEN_H;
+
+Backg->pos2.x=x;
+Backg->pos2.y=y;
+Backg->pos2.w=SCREEN_W;
+Backg->pos2.h=SCREEN_H;
 }
 void liberer(Image A)
 {
